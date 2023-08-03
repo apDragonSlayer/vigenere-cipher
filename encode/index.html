@@ -1,0 +1,162 @@
+<html>
+  <style>
+    body {
+      font-family: Roboto, sans-serif;
+    }
+
+    #formdiv {
+      border: 5px solid;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 10px;
+      width: 40%;
+      height: 50%;
+      display: flex;
+      justify-content: center;
+      padding: 0;
+    }
+
+    #result {
+      top: 20%;
+      position: absolute;
+      overflow: visible;
+      overflow-wrap: anywhere;
+      padding: 0;
+    }
+
+    #form {
+      display: flex;
+      margin-top: 1em;
+      margin-bottom: 1em;
+      margin-left: 1em;
+      margin-right: 1em;
+    }
+
+    #keyword {
+      position: absolute;
+      top: 2%;
+      left: 20%;
+      right: 20%;
+      align-self: center;
+      margin-top: 1em;
+      margin-bottom: 1em;
+      margin-left: 1em;
+      margin-right: 1em;
+    }
+
+    #message {
+      position: absolute;
+      top: 12%;
+      left: 20%;
+      right: 20%;
+      margin-top: 1em;
+      margin-bottom: 1em;
+      margin-left: 1em;
+      margin-right: 1em;
+    }
+  </style>
+
+  <body>
+    <div id="formdiv">
+      <form id="form">
+        <input
+          id="keyword"
+          type="text"
+          placeholder="Enter keyword"
+          autocomplete="off"
+        />
+        <input
+          id="message"
+          type="text"
+          placeholder="Enter message"
+          autocomplete="off"
+        />
+      </form>
+      <p id="result"></p>
+    </div>
+    <script>
+      /**
+       * @type {HTMLFormElement}
+       */
+      const form = document.getElementById("form");
+      form.addEventListener("input", function (event) {
+        event.preventDefault();
+        const keyword = document.getElementById("keyword").value.toLowerCase(),
+          message = document.getElementById("message").value.toLowerCase(),
+          resultBox = document.getElementById("result");
+        try {
+          const result = Encode(message, keyword);
+          resultBox.style = "color:black";
+          resultBox.innerText = result;
+        } catch (_e) {
+          resultBox.style = "color:red;";
+          resultBox.innerText = "Invalid inputs";
+        }
+      });
+      /**
+       * Encode a string with the Vigenere cipher
+       * @param {string} plaintext The message
+       * @param {string} keyword The keyword
+       * @returns {string}
+       */
+      function Encode(plaintext, keyword) {
+        // Checks if user input is valid.
+        // To be valid:
+        //   Should not be empty.
+        //   String can contain only lower or upper case letters.
+        /**
+         * Check if a string is valid
+         * @param {string} s The string to validate
+         * @returns {boolean}
+         */
+        function IsValid(s) {
+          if (s.length == 0) {
+            return false;
+          }
+          for (let index = 0; index < s.length; index++) {
+            let code = s.charCodeAt(index);
+            if (
+              code < "A".charCodeAt(0) ||
+              (code > "Z".charCodeAt(0) && code < "a".charCodeAt(0)) ||
+              code > "z".charCodeAt(0)
+            ) {
+              return false;
+            }
+          }
+          return true;
+        }
+
+        if (!IsValid(plaintext) || !IsValid(keyword))
+          throw new Error("Invalid keyword or message");
+
+        /**
+         * @type {number[]}
+         */
+        const msgArr = [];
+        for (const char of plaintext.split("")) {
+          const code = char.charCodeAt(0) - 97;
+          msgArr.push(code);
+        }
+
+        /**
+         * @type {number[]}
+         */
+        const keyArr = [];
+        for (let index = 0; index < msgArr.length; index++) {
+          const code = keyword.charCodeAt(index % keyword.length) - 97;
+          keyArr.push(code);
+        }
+
+        let final = "";
+        for (let index = 0; index < msgArr.length; index++) {
+          final += String.fromCharCode(
+            ((keyArr[index] + msgArr[index]) % 26) + 65
+          );
+        }
+        return final;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+## encode
+
+1. check if args are valid, throw if not
+2. converts plaintext string of a-z to array of numbers
+3. converts keyword as above, repeating to match length of plaintext
+4. does math
+
+## decode
+
+1. check ...
+2. convert encoded string of a-z to array of numbers
+3. converts keyword...
+4. does different math

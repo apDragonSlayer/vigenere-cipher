@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "alwaysStrict": true,
+    "lib": ["DOM", "ES2022", "ESNext"],
+    "noEmit": true,
+    "strict": true
+  },
+  "compileOnSave": true
+}
